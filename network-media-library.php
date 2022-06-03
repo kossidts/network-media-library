@@ -11,7 +11,7 @@
  *
  * @package   network-media-library
  * @link      https://github.com/humanmade/network-media-library
- * @author    John Blackbourn <john@johnblackbourn.com>, Dominik Schilling <d.schilling@inpsyde.com>, Frank Bültge <f.bueltge@inpsyde.com>
+ * @author    John Blackbourn <john@johnblackbourn.com>, Dominik Schilling <d.schilling@inpsyde.com>, Frank Bültge <f.bueltge@inpsyde.com>, Kossi D. T. Saka 
  * @copyright 2019 Human Made
  * @license   https://opensource.org/licenses/MIT
  *
@@ -20,7 +20,7 @@
  * Network:     true
  * Plugin URI:  https://github.com/humanmade/network-media-library
  * Version:     1.5.0
- * Author:      John Blackbourn, Dominik Schilling, Frank Bültge
+ * Author:      John Blackbourn, Dominik Schilling, Frank Bültge, Kossi D. T. Saka
  * Author URI:  https://github.com/humanmade/network-media-library/graphs/contributors
  * License:     MIT
  * License URI: ./LICENSE
@@ -382,7 +382,8 @@ function allow_media_library_access( array $caps, string $cap, int $user_id, arr
 /**
  * Filters 'img' elements in post content to add 'srcset' and 'sizes' attributes.
  *
- * @see wp_make_content_images_responsive()
+ * @see wp_make_content_images_responsive() - Deprecated since 5.5.0
+ * @see wp_filter_content_tags()
  *
  * @param string $content The raw post content to be filtered.
  * @return string Converted content with 'srcset' and 'sizes' attributes added to images.
@@ -394,14 +395,16 @@ function make_content_images_responsive( $content ) {
 
 	switch_to_media_site();
 
-	$content = wp_make_content_images_responsive( $content );
+	// $content = wp_make_content_images_responsive( $content );
+	$content = wp_filter_content_tags( $content );
 
 	restore_current_blog();
 
 	return $content;
 }
 
-remove_filter( 'the_content', 'wp_make_content_images_responsive' );
+// remove_filter( 'the_content', 'wp_make_content_images_responsive' );
+remove_filter( 'the_content', 'wp_filter_content_tags' );
 add_filter( 'the_content', __NAMESPACE__ . '\make_content_images_responsive' );
 
 /**
